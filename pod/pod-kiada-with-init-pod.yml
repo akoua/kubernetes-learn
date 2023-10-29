@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kiada-init
+spec:
+  initContainers:
+    - name: init-demo
+      image: luksa/init-demo:0.1
+    - name: network-check
+      image: luksa/network-connectivity-checker:0.1
+  restartPolicy: OnFailure
+  containers:
+    - name: kiada
+      image: luksa/kiada:0.2
+      stdin: true
+      imagePullPolicy: Always
+      ports:
+        - containerPort: 8080
+          name: http
+    - name: envoy
+      image: luksa/kiada-ssl-proxy:0.1
+      imagePullPolicy: Always
+      ports:
+        - containerPort: 8443
+          name: https
+        - containerPort: 9901
+          name: admin
