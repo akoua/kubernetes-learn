@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: quiz-nfs
+spec:
+  volumes:
+  - name: quiz-data
+    nfs:
+      server: 217.76.51.116
+      path: /some/path
+  containers:
+  - name: quiz-api
+    image: luksa/quiz-api:0.1
+    imagePullPolicy: Always
+    ports:
+    - name: http
+      containerPort: 8080
+  - name: mongo
+    image: mongo:5
+    volumeMounts:
+    - name: quiz-data
+      mountPath: /data/db
+
