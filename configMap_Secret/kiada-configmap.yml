@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kiada-cfg-map
+data:
+  INITIAL_STATUS_MESSAGE: "Hello you are start server"
+immutable: true

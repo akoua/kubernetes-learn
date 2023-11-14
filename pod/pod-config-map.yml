@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kiada-pod-cfmap
+spec:
+  containers:
+    - name: kiada-cfmap
+      image: luksa/kiada:0.4
+      imagePullPolicy: IfNotPresent
+      envFrom:
+        - configMapRef:
+            name: kiada-cfg-map
+            optional: false
+      command:
+        - node
+        - app.js
+      args:
+        - "--listen-port"
+        - "9090"
+      ports:
+        - containerPort: 8080
+          name: http
