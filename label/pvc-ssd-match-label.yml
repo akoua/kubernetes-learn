@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-ssd-label
+  labels:
+    type: ssd-claim
+spec:
+  storageClassName: local-ssd
+  resources:
+    requests:
+      storage: 1Gi
+  selector:
+    matchLabels:
+      type: ssd
+  accessModes:
+    - ReadWriteOnce
