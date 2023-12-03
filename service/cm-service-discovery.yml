@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-svc-discovery
+  namespace: kiada-ns
+data:
+  QUIZ_URL: http://quiz-service
+  QUOTE_URL: http://quote-service
+immutable: true
