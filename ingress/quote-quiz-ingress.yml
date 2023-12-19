@@ -1,0 +1,24 @@
+#you must configure postman with header Host equals to api.example.com
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: quote-quiz-ing
+spec:
+  rules:
+    - host: api.example.com
+      http:
+        paths:
+          - path: /quote
+            pathType: Exact
+            backend:
+              service:
+                name: quote
+                port:
+                  name: http
+          - path: /questions
+            pathType: Prefix
+            backend:
+              service:
+                name: quiz
+                port:
+                  name: http
