@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: quiz
+  labels:
+    app: quiz
+spec:
+  serviceName: quiz-po
+  podManagementPolicy: Parallel
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      partition: 0
+  replicas: 3
+  persistentVolumeClaimRetentionPolicy:
+    whenScaled: Delete
+    whenDeleted: Retain
+  selector:
+    matchLabels:
+      app: quiz
+  template:
+    metadata:
+      labels:
+        app: quiz
+        ver: "0.1"
+    spec:
+      volumes:
+        - name: db-data
+          persistentVolumeClaim:
+            claimName: db-data
+      containers:
+        - name: quiz-api
+          image: luksa/quiz-api:0.2
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            failureThreshold: 3
+            httpGet:
+              port: 8080
+              path: /
+              scheme: HTTP
+        - name: mongo
+          image: mongo:5
+          command:
+            - mongod
+            - --bind_ip
+            - 0.0.0.0
+            - --replSet
+            - quiz
+          volumeMounts:
+            - name: db-data
+              mountPath: /data/db
+  volumeClaimTemplates:
+    - metadata:
+        name: db-data
+        labels:
+          app: quiz
+      spec:
+        resources:
+          requests:
+            storage: 1Gi
+        accessModes:
+          - ReadWriteOnce
