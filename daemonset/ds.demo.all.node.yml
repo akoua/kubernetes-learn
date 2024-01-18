@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: demo-ds
+  labels:
+    app: test
+spec:
+  selector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values:
+          - demo-ds
+          - test-ds
+  template:
+    metadata:
+      name: demo-ds-pod
+      labels:
+        app: demo-ds
+    spec:
+      tolerations:
+        - operator: Exists
+      containers:
+        - name: demo
+          image: busybox
+          command:
+            - sleep
+            - infinity

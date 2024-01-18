@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: demo-ds-nds
+  labels:
+    app: test
+spec:
+  selector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values:
+          - demo-ds
+          - test-ds
+  template:
+    metadata:
+      labels:
+        app: demo-ds
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: kind-worker
+      containers:
+        - name: demo
+          image: busybox
+          command:
+            - sleep
+            - infinity
